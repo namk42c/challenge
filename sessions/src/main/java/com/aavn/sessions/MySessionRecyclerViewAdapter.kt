@@ -1,11 +1,12 @@
 package com.aavn.sessions
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.aavn.sessions.dummy.DummyContent.DummyItem
 
 /**
@@ -13,15 +14,24 @@ import com.aavn.sessions.dummy.DummyContent.DummyItem
  * TODO: Replace the implementation with code for your data type.
  */
 class MySessionRecyclerViewAdapter(
-    private val values: List<DummyItem>
+    private val values: List<DummyItem>, private val context: SessionFragment?
 ) : RecyclerView.Adapter<MySessionRecyclerViewAdapter.ViewHolder>() {
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_item, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(view).listen { pos ->
+            val item = values[pos]
+            context?.passData(item.content)
+            context?.activity?.finish()
+        }
     }
 
+    fun <T : RecyclerView.ViewHolder> T.listen(event: (position: Int) -> Unit): T {
+        itemView.setOnClickListener {
+            event.invoke(adapterPosition)
+        }
+        return this
+    }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
         holder.idView.text = item.id

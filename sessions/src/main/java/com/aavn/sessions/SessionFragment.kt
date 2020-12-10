@@ -1,5 +1,6 @@
 package com.aavn.sessions
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,18 @@ import com.aavn.sessions.dummy.DummyContent
  */
 class SessionFragment : Fragment() {
 
+    lateinit var dataPasser: OnDataPass
+
     private var columnCount = 1
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        dataPasser = context as OnDataPass
+    }
+
+    fun passData(data: String){
+        dataPasser.onDataPass(data)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +46,8 @@ class SessionFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_item_list, container, false)
 
         // Set the adapter
+        var _adapter = MySessionRecyclerViewAdapter(DummyContent.ITEMS, this)
+
         if (view is RecyclerView) {
             with(view) {
                 addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
@@ -41,8 +55,7 @@ class SessionFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = MySessionRecyclerViewAdapter(DummyContent.ITEMS)
-
+                adapter = _adapter
             }
         }
         return view
