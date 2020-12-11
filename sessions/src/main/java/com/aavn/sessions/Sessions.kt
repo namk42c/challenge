@@ -1,5 +1,6 @@
 package com.aavn.sessions
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,9 @@ class Sessions : AppCompatActivity(), OnDataPass {
         setContentView(R.layout.activity_sessions)
     }
     override fun onDataPass(data: String) {
-        Log.d("LOG","hello " + data)
+        val intent = intent
+        intent.putExtra("data", data)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
 }

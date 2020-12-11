@@ -22,7 +22,6 @@ class MySessionRecyclerViewAdapter(
         return ViewHolder(view).listen { pos ->
             val item = values[pos]
             context?.passData(item.content)
-            context?.activity?.finish()
         }
     }
 
